@@ -3,18 +3,23 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AgriGenius AI – Smart Farmer Platform</title>
+<title>AgriGenius AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{--green:#1b3a1b;--greenM:#2d6a2d;--greenB:#4caf50;--greenL:#a5d6a7;--gold:#f9a825;--goldL:#fff8e1;--cream:#faf7f0;--white:#fff;--text:#1c1c1c;--muted:#6b7280;--border:#d1e8d1;--red:#e53935;--blue:#1a237e;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
 header{background:linear-gradient(135deg,#1b3a1b 60%,#2d6a2d);color:#fff;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,0.2);position:sticky;top:0;z-index:100;}
-.logo{width:42px;height:42px;background:var(--gold);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:0 2px 10px rgba(249,168,37,0.45);}
+.logo{width:42px;height:42px;background:var(--gold);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
 .htitle{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;}
 .hsub{font-size:.65rem;color:var(--greenL);letter-spacing:1.5px;text-transform:uppercase;}
 .badge{margin-left:auto;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);border-radius:20px;padding:4px 11px;font-size:.66rem;color:var(--greenL);}
-#tabBar{background:#fff;border-bottom:1.5px solid var(--border);display:flex;position:sticky;top:68px;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+#keyBar{background:#fff8e1;border-bottom:2px solid #ffe082;padding:10px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+#keyBar label{font-size:.78rem;color:#795500;font-weight:700;white-space:nowrap;}
+#apiKeyInput{flex:1;min-width:180px;border:1.5px solid #ffd54f;border-radius:8px;padding:7px 12px;font-size:.82rem;outline:none;font-family:inherit;}
+#saveKeyBtn{background:#f9a825;border:none;border-radius:8px;padding:7px 16px;font-size:.82rem;font-weight:700;cursor:pointer;color:#1b3a1b;font-family:inherit;}
+#keyStatus{font-size:.75rem;font-weight:600;}
+#tabBar{background:#fff;border-bottom:1.5px solid var(--border);display:flex;position:sticky;top:116px;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
 .tab{flex:1;padding:12px 4px;border:none;background:transparent;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;color:var(--muted);transition:all .2s;font-size:.74rem;}
 .tab.active{border-bottom-color:var(--greenB);color:var(--green);font-weight:700;}
 .tab-icon{font-size:19px;margin-bottom:2px;display:block;}
@@ -46,8 +51,7 @@ header{background:linear-gradient(135deg,#1b3a1b 60%,#2d6a2d);color:#fff;padding
 .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
 .qcard{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 6px;cursor:pointer;text-align:center;font-family:inherit;transition:all .2s;}
 .qcard:hover{border-color:var(--greenB);transform:translateY(-2px);}
-.qi{font-size:22px;margin-bottom:3px;}
-.ql{font-size:.7rem;font-weight:600;color:var(--green);line-height:1.3;}
+.qi{font-size:22px;margin-bottom:3px;}.ql{font-size:.7rem;font-weight:600;color:var(--green);line-height:1.3;}
 .lang-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
 .lang-row label{font-size:.8rem;color:var(--muted);font-weight:500;}
 select{border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.82rem;background:#fff;color:var(--green);outline:none;font-family:inherit;cursor:pointer;}
@@ -77,14 +81,11 @@ textarea::placeholder{color:#aaa;}
 .w-desc{font-size:1rem;color:var(--greenM);font-weight:600;margin-top:6px;}
 .w-stats{display:flex;flex-direction:column;gap:8px;}
 .w-stat{background:#fff;border-radius:10px;padding:7px 14px;text-align:center;}
-.w-stat .sl{font-size:.68rem;color:var(--muted);}
-.w-stat .sv{font-size:.95rem;font-weight:700;color:var(--green);}
+.w-stat .sl{font-size:.68rem;color:var(--muted);}.w-stat .sv{font-size:.95rem;font-weight:700;color:var(--green);}
 .fc-wrap{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
 .fcard{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;text-align:center;min-width:88px;flex-shrink:0;}
-.fdate{font-size:.68rem;color:var(--muted);font-weight:600;}
-.ficon{font-size:24px;margin:6px 0;}
-.fmax{font-size:.85rem;font-weight:700;color:var(--green);}
-.fmin{font-size:.75rem;color:var(--muted);}
+.fdate{font-size:.68rem;color:var(--muted);font-weight:600;}.ficon{font-size:24px;margin:6px 0;}
+.fmax{font-size:.85rem;font-weight:700;color:var(--green);}.fmin{font-size:.75rem;color:var(--muted);}
 .frain{font-size:.68rem;color:#1565c0;margin-top:3px;}
 .advisory-box{background:var(--goldL);border:1px solid #ffe082;border-radius:14px;padding:16px;}
 .advisory-box h4{font-weight:700;color:#795500;margin-bottom:8px;font-size:.88rem;}
@@ -92,17 +93,15 @@ textarea::placeholder{color:#aaa;}
 .soil-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.85rem;outline:none;font-family:inherit;color:var(--text);}
 .param-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:10px;}
 .param-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.param-label{font-size:.82rem;font-weight:600;color:var(--text);}
-.param-val{font-size:1rem;font-weight:700;}
+.param-label{font-size:.82rem;font-weight:600;color:var(--text);}.param-val{font-size:1rem;font-weight:700;}
 .param-marks{display:flex;justify-content:space-between;font-size:.67rem;color:#bbb;margin-top:2px;}
 .ph-tag{font-size:.72rem;margin-top:5px;font-weight:600;}
-.btn-big{width:100%;border:none;border-radius:12px;padding:14px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px;}
+.btn-big{width:100%;border:none;border-radius:12px;padding:14px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;}
 .btn-big:disabled{opacity:.6;cursor:not-allowed;}
 .result-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px;margin-top:14px;font-size:.86rem;line-height:1.78;color:var(--text);}
 .upload-zone{border:2.5px dashed var(--border);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;background:#fff;transition:all .2s;margin-bottom:12px;}
 .upload-zone.drag{border-color:var(--greenB);background:#f0fdf4;}
-.upload-icon{font-size:48px;margin-bottom:10px;}
-.upload-title{font-weight:700;color:var(--green);margin-bottom:4px;font-size:.95rem;}
+.upload-icon{font-size:48px;margin-bottom:10px;}.upload-title{font-weight:700;color:var(--green);margin-bottom:4px;font-size:.95rem;}
 .upload-sub{font-size:.77rem;color:var(--muted);}
 .btn-row{display:flex;gap:8px;margin-bottom:14px;}
 .error-box{background:#fff3f3;border:1px solid #ffcdd2;border-radius:10px;padding:10px 14px;font-size:.83rem;color:var(--red);margin-bottom:12px;}
@@ -120,6 +119,14 @@ textarea::placeholder{color:#aaa;}
   </div>
   <div class="badge">✦ AI Powered</div>
 </header>
+
+<!-- API KEY BAR -->
+<div id="keyBar">
+  <label>🔑 OpenRouter Key:</label>
+  <input id="apiKeyInput" type="password" placeholder="Paste your sk-or-v1-... key here"/>
+  <button id="saveKeyBtn" onclick="saveKey()">Save ✓</button>
+  <span id="keyStatus"></span>
+</div>
 
 <div id="tabBar">
   <button class="tab active" onclick="switchTab('chat',this)"><span class="tab-icon">💬</span>AI Chat</button>
@@ -180,7 +187,7 @@ textarea::placeholder{color:#aaa;}
   <div id="page-soil" class="page">
     <div class="sec-head" style="background:linear-gradient(135deg,#3e2723,#6d4c41)">
       <h2>🧪 Smart Soil Testing Advisor</h2>
-      <p>Enter soil test values for AI crop & fertilizer recommendations</p>
+      <p>Enter soil test values for AI crop and fertilizer recommendations</p>
     </div>
     <div class="soil-grid">
       <div>
@@ -203,7 +210,7 @@ textarea::placeholder{color:#aaa;}
   <div id="page-photo" class="page">
     <div class="sec-head" style="background:linear-gradient(135deg,#1a237e,#283593)">
       <h2>📸 Crop Disease Detector</h2>
-      <p>Upload photo → AI identifies disease & gives treatment with Indian product names</p>
+      <p>Upload photo — AI identifies disease and gives treatment with Indian product names</p>
     </div>
     <div class="upload-zone" id="uploadZone"
       onclick="document.getElementById('fileInput').click()"
@@ -214,12 +221,12 @@ textarea::placeholder{color:#aaa;}
       <div id="uploadContent">
         <div class="upload-icon">📷</div>
         <div class="upload-title">Tap to upload crop photo</div>
-        <div class="upload-sub">or drag & drop • JPG, PNG • Max 5MB</div>
+        <div class="upload-sub">or drag and drop — JPG, PNG — Max 5MB</div>
         <div class="upload-sub" style="margin-top:6px;">📱 Mobile: opens camera directly</div>
       </div>
     </div>
     <div class="btn-row" id="photoBtns" style="display:none">
-      <button class="btn-big" id="photoBtn" style="background:linear-gradient(135deg,#1a237e,#3949ab);flex:1;margin-top:0;" onclick="analyzePhoto()">🔍 Detect Disease & Get Treatment</button>
+      <button class="btn-big" id="photoBtn" style="background:linear-gradient(135deg,#1a237e,#3949ab);flex:1;margin-top:0;" onclick="analyzePhoto()">🔍 Detect Disease and Get Treatment</button>
       <button onclick="clearPhoto()" style="background:#f5f5f5;border:1.5px solid var(--border);border-radius:12px;padding:13px 16px;cursor:pointer;font-size:.85rem;color:var(--muted);font-family:inherit;">🗑️</button>
     </div>
     <div id="photoResult"></div>
@@ -231,38 +238,41 @@ textarea::placeholder{color:#aaa;}
 <div class="disclaimer">⚠️ AgriGenius AI provides general advisory. For critical decisions, consult your local <strong>Krishi Vigyan Kendra (KVK)</strong> or agricultural officer.</div>
 
 <script>
-const API_KEY = "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";
+// CONFIG
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
-const MODEL_CHAT = "meta-llama/llama-3.3-70b-instruct:free";
+const MODEL_CHAT   = "meta-llama/llama-3.3-70b-instruct:free";
 const MODEL_VISION = "meta-llama/llama-3.2-11b-vision-instruct:free";
-const SITE_URL = "https://nandeesh63.github.io";
+const SITE_URL  = "https://nandeesh63.github.io";
 const SITE_NAME = "AgriGenius AI";
 
-let currentLang = "English";
+// STATE
+let API_KEY = localStorage.getItem("agri_api_key") || "";
+let currentLang  = "English";
 let currentTopic = "🌱 General";
-let chatHistory = [];
-let isLoading = false;
-let voiceOn = false;
-let recog = null;
-let photoBase64 = "";
-let photoMime = "image/jpeg";
+let chatHistory  = [];
+let isLoading    = false;
+let voiceOn      = false;
+let recog        = null;
+let photoBase64  = "";
+let photoMime    = "image/jpeg";
 
+// DATA
 const TOPICS = ["🌱 General","🍂 Crop Disease","💧 Irrigation","📋 Govt Schemes","💰 Market Prices","🌿 Organic","🐄 Livestock","🌾 Seeds"];
 const QUICK = [
-  {icon:"🌾",label:"Kharif Crops",q:"What are the best crops to grow in Kharif season in India?"},
+  {icon:"🌾",label:"Kharif Crops",  q:"What are the best crops to grow in Kharif season in India?"},
   {icon:"🍅",label:"Tomato Disease",q:"My tomato leaves are turning yellow with brown spots. What disease and how to treat?"},
-  {icon:"📋",label:"PM-KISAN",q:"Tell me about PM-KISAN scheme eligibility and how to apply."},
-  {icon:"💧",label:"Drip Irrigation",q:"What is drip irrigation and how can small farmers benefit from it?"},
-  {icon:"🪱",label:"Soil Fertility",q:"How to improve soil fertility naturally without chemical fertilizers?"},
-  {icon:"🐛",label:"Pest Control",q:"How to control whitefly and aphid pests on cotton crop organically?"},
+  {icon:"📋",label:"PM-KISAN",      q:"Tell me about PM-KISAN scheme eligibility and how to apply."},
+  {icon:"💧",label:"Drip Irrigation",q:"What is drip irrigation and how can small farmers benefit?"},
+  {icon:"🪱",label:"Soil Fertility", q:"How to improve soil fertility naturally without chemical fertilizers?"},
+  {icon:"🐛",label:"Pest Control",   q:"How to control whitefly and aphid pests on cotton organically?"},
 ];
 const SOIL_PARAMS = [
-  {id:"ph",label:"Soil pH",unit:"",min:0,max:14,step:.1,val:6.5},
-  {id:"nitrogen",label:"Nitrogen (N)",unit:" kg/ha",min:0,max:600,step:10,val:200},
-  {id:"phosphorus",label:"Phosphorus (P)",unit:" kg/ha",min:0,max:200,step:5,val:50},
-  {id:"potassium",label:"Potassium (K)",unit:" kg/ha",min:0,max:400,step:10,val:150},
-  {id:"organic",label:"Organic Matter",unit:"%",min:0,max:10,step:.1,val:2},
-  {id:"moisture",label:"Moisture",unit:"%",min:0,max:100,step:1,val:40},
+  {id:"ph",        label:"Soil pH",       unit:"",      min:0,  max:14,  step:.1, val:6.5},
+  {id:"nitrogen",  label:"Nitrogen (N)",  unit:" kg/ha",min:0,  max:600, step:10, val:200},
+  {id:"phosphorus",label:"Phosphorus (P)",unit:" kg/ha",min:0,  max:200, step:5,  val:50 },
+  {id:"potassium", label:"Potassium (K)", unit:" kg/ha",min:0,  max:400, step:10, val:150},
+  {id:"organic",   label:"Organic Matter",unit:"%",     min:0,  max:10,  step:.1, val:2  },
+  {id:"moisture",  label:"Moisture",      unit:"%",     min:0,  max:100, step:1,  val:40 },
 ];
 const CITY_W = {
   delhi:{temp:32,humidity:45,wind:12,rain:0,desc:"Sunny & Hazy",icon:"🌤️"},
@@ -274,52 +284,7 @@ const CITY_W = {
   pune:{temp:26,humidity:58,wind:11,rain:0,desc:"Clear & Pleasant",icon:"☀️"},
   ahmedabad:{temp:35,humidity:38,wind:15,rain:0,desc:"Hot & Dry",icon:"☀️"},
   jaipur:{temp:34,humidity:32,wind:13,rain:0,desc:"Hot & Dry",icon:"☀️"},
-  lucknow:{temp:31,humidity:50,wind:10,rain:0,desc:"Sunny",icon:"☀️"},
-  chandigarh:{temp:27,humidity:55,wind:12,rain:0,desc:"Clear",icon:"☀️"},
-  nagpur:{temp:33,humidity:48,wind:13,rain:0,desc:"Hot & Sunny",icon:"☀️"},
-  warangal:{temp:31,humidity:58,wind:12,rain:0,desc:"Mostly Sunny",icon:"🌤️"},
-  amritsar:{temp:28,humidity:50,wind:11,rain:0,desc:"Clear",icon:"☀️"},
-  coimbatore:{temp:27,humidity:68,wind:13,rain:0,desc:"Pleasant",icon:"🌤️"},
-  nashik:{temp:25,humidity:60,wind:10,rain:0,desc:"Pleasant",icon:"☀️"},
-  surat:{temp:30,humidity:70,wind:17,rain:1,desc:"Humid & Cloudy",icon:"☁️"},
-  patna:{temp:30,humidity:65,wind:10,rain:1,desc:"Partly Cloudy",icon:"⛅"},
-  bhopal:{temp:29,humidity:52,wind:11,rain:0,desc:"Partly Cloudy",icon:"⛅"},
-  visakhapatnam:{temp:29,humidity:75,wind:20,rain:2,desc:"Coastal Breezy",icon:"🌊"},
-};
-const FC_PAT = [[2,0],[1,0],[-1,1],[-2,3],[0,0]];
-
-const fmt = t => t.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/\n/g,"<br/>");
-const dots = () => `<div class="dots-wrap"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
-function vary(n,r){return +(n+(Math.random()*r*2-r)).toFixed(1);}
-function autoResize(el){el.style.height="auto";el.style.height=Math.min(el.scrollHeight,120)+"px";}
-function scrollChat(){const b=document.getElementById("chatbox");if(b)b.scrollTop=b.scrollHeight;}
-
-// INIT
-window.onload=function(){
-  // Topics
-  const tw=document.getElementById("topicWrap");
-  TOPICS.forEach(t=>{
-    const b=document.createElement("button");
-    b.className="chip"+(t===currentTopic?" active":"");
-    b.textContent=t;
-    b.onclick=()=>{currentTopic=t;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));b.classList.add("active");};
-    tw.appendChild(b);
-  });
-  // Quick
-  const qg=document.getElementById("quickGrid");
-  QUICK.forEach(q=>{
-    const d=document.createElement("div");
-    d.className="qcard";
-    d.innerHTML=`<div class="qi">${q.icon}</div><div class="ql">${q.label}</div>`;
-    d.onclick=()=>sendChat(q.q);
-    qg.appendChild(d);
-  });
-  // Soil params
-  const sp=document.getElementById("soilParams");
-  SOIL_PARAMS.forEach(p=>{
-    const d=document.createElement("div");
-    d.className="param-card";
-    d.innerHTML=`
+  lucknowinnerHTML=`
       <div class="param-top">
         <span class="param-label">${p.label}</span>
         <span class="param-val" id="val-${p.id}" style="color:${p.id==='ph'?phColor(p.val):'var(--green)'}">${p.val}${p.unit}</span>
