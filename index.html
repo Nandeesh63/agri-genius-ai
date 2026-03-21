@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AgriGenius AI – Smart Farmer Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--green:#1b3a1b;--greenM:#2d6a2d;--greenB:#4caf50;--greenL:#a5d6a7;--gold:#f9a825;--goldL:#fff8e1;--cream:#faf7f0;--white:#fff;--text:#1c1c1c;--muted:#6b7280;--border:#d1e8d1;--red:#e53935;--blue:#1a237e;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+header{background:linear-gradient(135deg,#1b3a1b 60%,#2d6a2d);color:#fff;padding:13px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 16px rgba(0,0,0,0.2);position:sticky;top:0;z-index:100;}
+.logo{width:42px;height:42px;background:var(--gold);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;box-shadow:0 2px 10px rgba(249,168,37,0.45);}
+.htitle{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;}
+.hsub{font-size:.65rem;color:var(--greenL);letter-spacing:1.5px;text-transform:uppercase;}
+.badge{margin-left:auto;background:rgba(255,255,255,0.13);border:1px solid rgba(255,255,255,0.22);border-radius:20px;padding:4px 11px;font-size:.66rem;color:var(--greenL);}
+#tabBar{background:#fff;border-bottom:1.5px solid var(--border);display:flex;position:sticky;top:68px;z-index:99;box-shadow:0 2px 8px rgba(0,0,0,0.05);}
+.tab{flex:1;padding:12px 4px;border:none;background:transparent;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;color:var(--muted);transition:all .2s;font-size:.74rem;}
+.tab.active{border-bottom-color:var(--greenB);color:var(--green);font-weight:700;}
+.tab-icon{font-size:19px;margin-bottom:2px;display:block;}
+.main{flex:1;max-width:860px;margin:0 auto;width:100%;padding:18px 14px 50px;}
+.page{display:none;}.page.active{display:block;}
+.sec-head{border-radius:16px;padding:18px;margin-bottom:16px;color:#fff;}
+.sec-head h2{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:3px;}
+.sec-head p{font-size:.78rem;opacity:.8;}
+.topic-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;}
+.chip{border-radius:20px;padding:5px 13px;font-size:.76rem;cursor:pointer;transition:all .2s;font-family:inherit;border:1.5px solid var(--border);background:#f0f7f0;color:var(--muted);}
+.chip.active{background:var(--gold);border-color:var(--gold);color:var(--green);font-weight:700;}
+.chatbox{background:#fff;border:1.5px solid var(--border);border-radius:18px;min-height:260px;max-height:400px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:14px;box-shadow:0 4px 24px rgba(27,58,27,0.08);}
+.chatbox::-webkit-scrollbar{width:4px;}.chatbox::-webkit-scrollbar-thumb{background:var(--greenL);border-radius:4px;}
+.msg{display:flex;gap:10px;align-items:flex-start;animation:fadeUp .3s ease;}
+.msg.user{flex-direction:row-reverse;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.msg.ai .avatar{background:var(--green);}.msg.user .avatar{background:var(--gold);}
+.bubble{max-width:80%;padding:11px 15px;border-radius:16px;font-size:.87rem;line-height:1.72;}
+.msg.ai .bubble{background:#f0f7f0;border:1px solid var(--border);border-top-left-radius:4px;color:var(--text);}
+.msg.user .bubble{background:var(--green);color:#fff;border-top-right-radius:4px;}
+.welcome{text-align:center;padding:24px 16px;color:var(--muted);}
+.welcome .wi{font-size:48px;margin-bottom:10px;}
+.welcome h3{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--green);margin-bottom:6px;}
+.dots-wrap{display:flex;gap:5px;padding:10px 14px;align-items:center;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--greenB);animation:bounce 1.2s infinite;}
+.dot:nth-child(2){animation-delay:.2s;}.dot:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-8px)}}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+.qcard{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 6px;cursor:pointer;text-align:center;font-family:inherit;transition:all .2s;}
+.qcard:hover{border-color:var(--greenB);transform:translateY(-2px);}
+.qi{font-size:22px;margin-bottom:3px;}
+.ql{font-size:.7rem;font-weight:600;color:var(--green);line-height:1.3;}
+.lang-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.lang-row label{font-size:.8rem;color:var(--muted);font-weight:500;}
+select{border:1.5px solid var(--border);border-radius:8px;padding:6px 10px;font-size:.82rem;background:#fff;color:var(--green);outline:none;font-family:inherit;cursor:pointer;}
+#voiceStatus{border-radius:8px;padding:7px 12px;font-size:.8rem;margin-bottom:8px;display:none;}
+.input-row{display:flex;gap:8px;align-items:flex-end;}
+.input-wrap{flex:1;background:#fff;border:2px solid var(--border);border-radius:14px;display:flex;align-items:flex-end;padding:9px 12px;}
+.input-wrap:focus-within{border-color:var(--greenB);}
+textarea{flex:1;border:none;outline:none;resize:none;font-family:inherit;font-size:.9rem;background:transparent;color:var(--text);line-height:1.5;max-height:100px;overflow-y:auto;}
+textarea::placeholder{color:#aaa;}
+.btn-icon{width:44px;height:44px;border:none;border-radius:12px;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
+.btn-send{background:var(--green);}.btn-send:disabled{opacity:.5;cursor:not-allowed;}
+.btn-voice{background:var(--greenM);}
+.btn-voice.listening{background:var(--red);animation:vPulse 1s infinite;}
+@keyframes vPulse{0%,100%{box-shadow:0 0 0 0 rgba(229,57,53,.5)}50%{box-shadow:0 0 0 12px rgba(229,57,53,0)}}
+.city-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.city-input{flex:1;min-width:160px;border:1.5px solid var(--border);border-radius:10px;padding:9px 14px;font-size:.88rem;outline:none;font-family:inherit;color:var(--text);}
+.city-input:focus{border-color:var(--greenB);}
+.btn-search{background:var(--blue);border:none;border-radius:10px;padding:9px 18px;color:#fff;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-gps{background:#0288d1;border:none;border-radius:10px;padding:9px 14px;color:#fff;font-size:.85rem;cursor:pointer;font-family:inherit;}
+.city-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.ccchip{background:#fff;border:1px solid var(--border);border-radius:16px;padding:4px 11px;font-size:.73rem;cursor:pointer;color:var(--muted);font-family:inherit;transition:all .2s;}
+.ccchip:hover{background:#e8f5e9;color:var(--green);}
+.weather-card{background:linear-gradient(135deg,#e3f2fd,#e8f5e9);border:1.5px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px;}
+.w-main{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;}
+.w-city{font-size:.75rem;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.w-temp{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;color:var(--green);line-height:1;}
+.w-desc{font-size:1rem;color:var(--greenM);font-weight:600;margin-top:6px;}
+.w-stats{display:flex;flex-direction:column;gap:8px;}
+.w-stat{background:#fff;border-radius:10px;padding:7px 14px;text-align:center;}
+.w-stat .sl{font-size:.68rem;color:var(--muted);}
+.w-stat .sv{font-size:.95rem;font-weight:700;color:var(--green);}
+.fc-wrap{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;}
+.fcard{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;text-align:center;min-width:88px;flex-shrink:0;}
+.fdate{font-size:.68rem;color:var(--muted);font-weight:600;}
+.ficon{font-size:24px;margin:6px 0;}
+.fmax{font-size:.85rem;font-weight:700;color:var(--green);}
+.fmin{font-size:.75rem;color:var(--muted);}
+.frain{font-size:.68rem;color:#1565c0;margin-top:3px;}
+.advisory-box{background:var(--goldL);border:1px solid #ffe082;border-radius:14px;padding:16px;}
+.advisory-box h4{font-weight:700;color:#795500;margin-bottom:8px;font-size:.88rem;}
+.soil-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.soil-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.85rem;outline:none;font-family:inherit;color:var(--text);}
+.param-card{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:10px;}
+.param-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.param-label{font-size:.82rem;font-weight:600;color:var(--text);}
+.param-val{font-size:1rem;font-weight:700;}
+.param-marks{display:flex;justify-content:space-between;font-size:.67rem;color:#bbb;margin-top:2px;}
+.ph-tag{font-size:.72rem;margin-top:5px;font-weight:600;}
+.btn-big{width:100%;border:none;border-radius:12px;padding:14px;color:#fff;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.3px;}
+.btn-big:disabled{opacity:.6;cursor:not-allowed;}
+.result-box{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:18px;margin-top:14px;font-size:.86rem;line-height:1.78;color:var(--text);}
+.upload-zone{border:2.5px dashed var(--border);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;background:#fff;transition:all .2s;margin-bottom:12px;}
+.upload-zone.drag{border-color:var(--greenB);background:#f0fdf4;}
+.upload-icon{font-size:48px;margin-bottom:10px;}
+.upload-title{font-weight:700;color:var(--green);margin-bottom:4px;font-size:.95rem;}
+.upload-sub{font-size:.77rem;color:var(--muted);}
+.btn-row{display:flex;gap:8px;margin-bottom:14px;}
+.error-box{background:#fff3f3;border:1px solid #ffcdd2;border-radius:10px;padding:10px 14px;font-size:.83rem;color:var(--red);margin-bottom:12px;}
+.info-box{background:#e8f5e9;border:1px solid #c8e6c9;border-radius:12px;padding:12px 16px;font-size:.79rem;color:#2e7d32;line-height:1.65;}
+.disclaimer{background:var(--goldL);border-top:1px solid #ffe082;padding:10px 16px;font-size:.71rem;color:#795500;text-align:center;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🌾</div>
+  <div>
+    <div class="htitle">AgriGenius AI</div>
+    <div class="hsub">Smart Farmer Platform</div>
+  </div>
+  <div class="badge">✦ AI Powered</div>
+</header>
+
+<div id="tabBar">
+  <button class="tab active" onclick="switchTab('chat',this)"><span class="tab-icon">💬</span>AI Chat</button>
+  <button class="tab" onclick="switchTab('weather',this)"><span class="tab-icon">🌤️</span>Weather</button>
+  <button class="tab" onclick="switchTab('soil',this)"><span class="tab-icon">🧪</span>Soil Test</button>
+  <button class="tab" onclick="switchTab('photo',this)"><span class="tab-icon">📸</span>Crop Photo</button>
+</div>
+
+<div class="main">
+
+  <!-- CHAT -->
+  <div id="page-chat" class="page active">
+    <div class="topic-wrap" id="topicWrap"></div>
+    <div class="chatbox" id="chatbox">
+      <div class="welcome">
+        <div class="wi">🌾</div>
+        <h3>Namaste, Kisan! 🙏</h3>
+        <p>Ask anything about farming — crops, diseases, govt schemes, market prices and more.</p>
+      </div>
+    </div>
+    <div class="quick-grid" id="quickGrid"></div>
+    <div class="lang-row">
+      <label>🌐 Language:</label>
+      <select id="langSelect" onchange="currentLang=this.value">
+        <option>English</option><option>Hindi (हिंदी)</option><option>Telugu (తెలుగు)</option>
+        <option>Tamil (தமிழ்)</option><option>Kannada (ಕನ್ನಡ)</option><option>Marathi (मराठी)</option>
+        <option>Gujarati (ગુજરાતી)</option><option>Punjabi (ਪੰਜਾਬੀ)</option><option>Bengali (বাংলা)</option>
+      </select>
+    </div>
+    <div id="voiceStatus"></div>
+    <div class="input-row">
+      <div class="input-wrap">
+        <textarea id="chatInput" rows="1" placeholder="Type your farming question..."
+          oninput="autoResize(this)" onkeydown="chatKey(event)"></textarea>
+      </div>
+      <button class="btn-icon btn-voice" id="voiceBtn" onclick="toggleVoice()">🎙️</button>
+      <button class="btn-icon btn-send" id="sendBtn" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
+  <!-- WEATHER -->
+  <div id="page-weather" class="page">
+    <div class="sec-head" style="background:linear-gradient(135deg,#0d47a1,#1565c0)">
+      <h2>🌤️ Weather & Farm Advisory</h2>
+      <p>Current weather + AI farming advice for your location</p>
+    </div>
+    <div class="city-row">
+      <input class="city-input" id="cityInput" placeholder="Enter city (Delhi, Pune, Warangal...)" onkeydown="if(event.key==='Enter')fetchWeather()"/>
+      <button class="btn-search" onclick="fetchWeather()">Search</button>
+      <button class="btn-gps" onclick="fetchByGPS()">📍 GPS</button>
+    </div>
+    <div class="city-chips" id="cityChips"></div>
+    <div id="weatherError"></div>
+    <div id="weatherResult"></div>
+  </div>
+
+  <!-- SOIL -->
+  <div id="page-soil" class="page">
+    <div class="sec-head" style="background:linear-gradient(135deg,#3e2723,#6d4c41)">
+      <h2>🧪 Smart Soil Testing Advisor</h2>
+      <p>Enter soil test values for AI crop & fertilizer recommendations</p>
+    </div>
+    <div class="soil-grid">
+      <div>
+        <label style="font-size:.78rem;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;">📍 State / Region</label>
+        <input class="soil-input" id="soilState" placeholder="e.g. Maharashtra, Punjab..."/>
+      </div>
+      <div>
+        <label style="font-size:.78rem;color:var(--muted);font-weight:600;display:block;margin-bottom:4px;">🌾 Season</label>
+        <select id="soilSeason" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:8px 12px;font-size:.85rem;outline:none;font-family:inherit;color:var(--green);background:#fff;">
+          <option>Kharif</option><option>Rabi</option><option>Zaid</option><option>Year-round</option>
+        </select>
+      </div>
+    </div>
+    <div id="soilParams"></div>
+    <button class="btn-big" id="soilBtn" style="background:linear-gradient(135deg,#3e2723,#6d4c41);" onclick="analyzeSoil()">🔬 Analyze Soil & Get Recommendations</button>
+    <div id="soilResult"></div>
+  </div>
+
+  <!-- PHOTO -->
+  <div id="page-photo" class="page">
+    <div class="sec-head" style="background:linear-gradient(135deg,#1a237e,#283593)">
+      <h2>📸 Crop Disease Detector</h2>
+      <p>Upload photo → AI identifies disease & gives treatment with Indian product names</p>
+    </div>
+    <div class="upload-zone" id="uploadZone"
+      onclick="document.getElementById('fileInput').click()"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleDrop(event)">
+      <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none" onchange="processFile(this.files[0])"/>
+      <div id="uploadContent">
+        <div class="upload-icon">📷</div>
+        <div class="upload-title">Tap to upload crop photo</div>
+        <div class="upload-sub">or drag & drop • JPG, PNG • Max 5MB</div>
+        <div class="upload-sub" style="margin-top:6px;">📱 Mobile: opens camera directly</div>
+      </div>
+    </div>
+    <div class="btn-row" id="photoBtns" style="display:none">
+      <button class="btn-big" id="photoBtn" style="background:linear-gradient(135deg,#1a237e,#3949ab);flex:1;margin-top:0;" onclick="analyzePhoto()">🔍 Detect Disease & Get Treatment</button>
+      <button onclick="clearPhoto()" style="background:#f5f5f5;border:1.5px solid var(--border);border-radius:12px;padding:13px 16px;cursor:pointer;font-size:.85rem;color:var(--muted);font-family:inherit;">🗑️</button>
+    </div>
+    <div id="photoResult"></div>
+    <div class="info-box" id="photoTip">💡 <strong>Tips:</strong> Take a clear close-up of the affected leaf in good natural lighting. Make sure the diseased area fills most of the frame.</div>
+  </div>
+
+</div>
+
+<div class="disclaimer">⚠️ AgriGenius AI provides general advisory. For critical decisions, consult your local <strong>Krishi Vigyan Kendra (KVK)</strong> or agricultural officer.</div>
+
+<script>
+const API_KEY = "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";
+const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+const MODEL_CHAT = "meta-llama/llama-3.3-70b-instruct:free";
+const MODEL_VISION = "meta-llama/llama-3.2-11b-vision-instruct:free";
+const SITE_URL = "https://nandeesh63.github.io";
+const SITE_NAME = "AgriGenius AI";
+
+let currentLang = "English";
+let currentTopic = "🌱 General";
+let chatHistory = [];
+let isLoading = false;
+let voiceOn = false;
+let recog = null;
+let photoBase64 = "";
+let photoMime = "image/jpeg";
+
+const TOPICS = ["🌱 General","🍂 Crop Disease","💧 Irrigation","📋 Govt Schemes","💰 Market Prices","🌿 Organic","🐄 Livestock","🌾 Seeds"];
+const QUICK = [
+  {icon:"🌾",label:"Kharif Crops",q:"What are the best crops to grow in Kharif season in India?"},
+  {icon:"🍅",label:"Tomato Disease",q:"My tomato leaves are turning yellow with brown spots. What disease and how to treat?"},
+  {icon:"📋",label:"PM-KISAN",q:"Tell me about PM-KISAN scheme eligibility and how to apply."},
+  {icon:"💧",label:"Drip Irrigation",q:"What is drip irrigation and how can small farmers benefit from it?"},
+  {icon:"🪱",label:"Soil Fertility",q:"How to improve soil fertility naturally without chemical fertilizers?"},
+  {icon:"🐛",label:"Pest Control",q:"How to control whitefly and aphid pests on cotton crop organically?"},
+];
+const SOIL_PARAMS = [
+  {id:"ph",label:"Soil pH",unit:"",min:0,max:14,step:.1,val:6.5},
+  {id:"nitrogen",label:"Nitrogen (N)",unit:" kg/ha",min:0,max:600,step:10,val:200},
+  {id:"phosphorus",label:"Phosphorus (P)",unit:" kg/ha",min:0,max:200,step:5,val:50},
+  {id:"potassium",label:"Potassium (K)",unit:" kg/ha",min:0,max:400,step:10,val:150},
+  {id:"organic",label:"Organic Matter",unit:"%",min:0,max:10,step:.1,val:2},
+  {id:"moisture",label:"Moisture",unit:"%",min:0,max:100,step:1,val:40},
+];
+const CITY_W = {
+  delhi:{temp:32,humidity:45,wind:12,rain:0,desc:"Sunny & Hazy",icon:"🌤️"},
+  mumbai:{temp:28,humidity:82,wind:18,rain:2,desc:"Partly Cloudy",icon:"⛅"},
+  bangalore:{temp:24,humidity:65,wind:10,rain:0,desc:"Pleasant & Clear",icon:"☀️"},
+  hyderabad:{temp:30,humidity:55,wind:14,rain:0,desc:"Mostly Sunny",icon:"🌤️"},
+  chennai:{temp:33,humidity:78,wind:16,rain:1,desc:"Hot & Humid",icon:"⛅"},
+  kolkata:{temp:30,humidity:72,wind:12,rain:3,desc:"Cloudy",icon:"☁️"},
+  pune:{temp:26,humidity:58,wind:11,rain:0,desc:"Clear & Pleasant",icon:"☀️"},
+  ahmedabad:{temp:35,humidity:38,wind:15,rain:0,desc:"Hot & Dry",icon:"☀️"},
+  jaipur:{temp:34,humidity:32,wind:13,rain:0,desc:"Hot & Dry",icon:"☀️"},
+  lucknow:{temp:31,humidity:50,wind:10,rain:0,desc:"Sunny",icon:"☀️"},
+  chandigarh:{temp:27,humidity:55,wind:12,rain:0,desc:"Clear",icon:"☀️"},
+  nagpur:{temp:33,humidity:48,wind:13,rain:0,desc:"Hot & Sunny",icon:"☀️"},
+  warangal:{temp:31,humidity:58,wind:12,rain:0,desc:"Mostly Sunny",icon:"🌤️"},
+  amritsar:{temp:28,humidity:50,wind:11,rain:0,desc:"Clear",icon:"☀️"},
+  coimbatore:{temp:27,humidity:68,wind:13,rain:0,desc:"Pleasant",icon:"🌤️"},
+  nashik:{temp:25,humidity:60,wind:10,rain:0,desc:"Pleasant",icon:"☀️"},
+  surat:{temp:30,humidity:70,wind:17,rain:1,desc:"Humid & Cloudy",icon:"☁️"},
+  patna:{temp:30,humidity:65,wind:10,rain:1,desc:"Partly Cloudy",icon:"⛅"},
+  bhopal:{temp:29,humidity:52,wind:11,rain:0,desc:"Partly Cloudy",icon:"⛅"},
+  visakhapatnam:{temp:29,humidity:75,wind:20,rain:2,desc:"Coastal Breezy",icon:"🌊"},
+};
+const FC_PAT = [[2,0],[1,0],[-1,1],[-2,3],[0,0]];
+
+const fmt = t => t.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\*(.*?)\*/g,"<em>$1</em>").replace(/\n/g,"<br/>");
+const dots = () => `<div class="dots-wrap"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;
+function vary(n,r){return +(n+(Math.random()*r*2-r)).toFixed(1);}
+function autoResize(el){el.style.height="auto";el.style.height=Math.min(el.scrollHeight,120)+"px";}
+function scrollChat(){const b=document.getElementById("chatbox");if(b)b.scrollTop=b.scrollHeight;}
+
+// INIT
+window.onload=function(){
+  // Topics
+  const tw=document.getElementById("topicWrap");
+  TOPICS.forEach(t=>{
+    const b=document.createElement("button");
+    b.className="chip"+(t===currentTopic?" active":"");
+    b.textContent=t;
+    b.onclick=()=>{currentTopic=t;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));b.classList.add("active");};
+    tw.appendChild(b);
+  });
+  // Quick
+  const qg=document.getElementById("quickGrid");
+  QUICK.forEach(q=>{
+    const d=document.createElement("div");
+    d.className="qcard";
+    d.innerHTML=`<div class="qi">${q.icon}</div><div class="ql">${q.label}</div>`;
+    d.onclick=()=>sendChat(q.q);
+    qg.appendChild(d);
+  });
+  // Soil params
+  const sp=document.getElementById("soilParams");
+  SOIL_PARAMS.forEach(p=>{
+    const d=document.createElement("div");
+    d.className="param-card";
+    d.innerHTML=`
+      <div class="param-top">
+        <span class="param-label">${p.label}</span>
+        <span class="param-val" id="val-${p.id}" style="color:${p.id==='ph'?phColor(p.val):'var(--green)'}">${p.val}${p.unit}</span>
+      </div>
+      <input type="range" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.val}" id="range-${p.id}"
+        oninput="updateParam('${p.id}','${p.unit}')"
+        style="width:100%;accent-color:${p.id==='ph'?phColor(p.val):'var(--greenB)'};cursor:pointer;"/>
+      <div class="param-marks"><span>${p.min}${p.unit}</span><span>${p.max}${p.unit}</span></div>
+      ${p.id==='ph'?`<div class="ph-tag" id="ph-tag" style="color:${phColor(p.val)}">${phLabel(p.val)}</div>`:""}`;
+    sp.appendChild(d);
+  });
+  // City chips
+  const cc=document.getElementById("cityChips");
+  ["Delhi","Mumbai","Pune","Hyderabad","Bangalore","Chennai","Warangal","Jaipur","Amritsar","Nagpur","Lucknow","Nashik"].forEach(c=>{
+    const b=document.createElement("button");
+    b.className="ccchip";b.textContent=c;
+    b.onclick=()=>{document.getElementById("cityInput").value=c;fetchWeather();};
+    cc.appendChild(b);
+  });
+};
+
+function switchTab(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("page-"+id).classList.add("active");
+  el.classList.add("active");
+}
+
+async function callAI(messages,system,model){
+  const m=model||MODEL_CHAT;
+  const msgs=system?[{role:"system",content:system},...messages]:messages;
+  const res=await fetch(API_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":"Bearer "+API_KEY,"HTTP-Referer":SITE_URL,"X-Title":SITE_NAME},
+    body:JSON.stringify({model:m,messages:msgs,max_tokens:1000})
+  });
+  const data=await res.json();
+  if(data.error)throw new Error(data.error.message);
+  return data.choices[0].message.content;
+}
+
+// CHAT
+function appendBubble(role,content){
+  const box=document.getElementById("chatbox");
+  const w=box.querySelector(".welcome");if(w)w.remove();
+  const d=document.createElement("div");
+  d.className="msg "+role;
+  d.innerHTML=`<div class="avatar">${role==="user"?"👨‍🌾":"🌾"}</div><div class="bubble"><span>${fmt(content)}</span></div>`;
+  box.appendChild(d);scrollChat();
+}
+function showTyping(){
+  const box=document.getElementById("chatbox");
+  const w=box.querySelector(".welcome");if(w)w.remove();
+  const d=document.createElement("div");d.className="msg ai";d.id="typing";
+  d.innerHTML=`<div class="avatar">🌾</div><div class="bubble" style="background:#f0f7f0;border:1px solid var(--border);border-top-left-radius:4px;">${dots()}</div>`;
+  box.appendChild(d);scrollChat();
+}
+function removeTyping(){const t=document.getElementById("typing");if(t)t.remove();}
+
+async function sendChat(text){
+  const inp=document.getElementById("chatInput");
+  const q=(text||inp.value).trim();
+  if(!q||isLoading)return;
+  isLoading=true;
+  document.getElementById("sendBtn").disabled=true;
+  inp.value="";inp.style.height="auto";
+  appendBubble("user",q);
+  chatHistory.push({role:"user",content:q});
+  showTyping();
+  const sys=`You are AgriGenius AI, expert agricultural assistant for Indian farmers. Topic: ${currentTopic}. Reply ONLY in ${currentLang}. Be practical, warm, use bullet points. Address farmer as "Kisan bhai/didi".`;
+  try{
+    const r=await callAI(chatHistory,sys);
+    chatHistory.push({role:"assistant",content:r});
+    removeTyping();appendBubble("ai",r);
+  }catch(e){removeTyping();appendBubble("ai","⚠️ Error: "+e.message);}
+  isLoading=false;document.getElementById("sendBtn").disabled=false;
+}
+function chatKey(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat();}}
+
+// VOICE
+function setVS(msg,type){
+  const el=document.getElementById("voiceStatus");
+  if(!msg){el.style.display="none";return;}
+  el.style.display="block";
+  el.style.background=type==="error"?"#fff3f3":type==="ok"?"#e8f5e9":"#e3f2fd";
+  el.style.border="1px solid "+(type==="error"?"#ffcdd2":type==="ok"?"#c8e6c9":"#bbdefb");
+  el.style.color=type==="error"?"var(--red)":type==="ok"?"#2e7d32":"#1565c0";
+  el.textContent=msg;
+}
+function toggleVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){setVS("❌ Voice not supported. Use Chrome browser.","error");return;}
+  if(voiceOn&&recog){recog.stop();return;}
+  recog=new SR();
+  const langMap={"Hindi":"hi-IN","Telugu":"te-IN","Tamil":"ta-IN","Kannada":"kn-IN","Marathi":"mr-IN","Bengali":"bn-IN"};
+  recog.lang=Object.entries(langMap).find(([k])=>currentLang.includes(k))?.[1]||"en-IN";
+  recog.interimResults=false;
+  const btn=document.getElementById("voiceBtn");
+  recog.onstart=()=>{voiceOn=true;btn.classList.add("listening");btn.textContent="⏹";setVS("🎙️ Listening... speak now","info");};
+  recog.onend=()=>{voiceOn=false;btn.classList.remove("listening");btn.textContent="🎙️";setTimeout(()=>setVS(""),2000);};
+  recog.onerror=e=>setVS("❌ "+(e.error==="not-allowed"?"Mic permission denied.":"Error: "+e.error),"error");
+  recog.onresult=e=>{const t=e.results[0][0].transcript;document.getElementById("chatInput").value=t;setVS("✅ Heard: "+t,"ok");sendChat(t);};
+  try{recog.start();}catch(e){setVS("❌ "+e.message,"error");}
+}
+
+// WEATHER
+function phColor(v){return v<5.5?"#e53935":v<6?"#ff9800":v<=7.5?"#4caf50":v<=8?"#ff9800":"#e53935";}
+function phLabel(v){return v<5.5?"⚠️ Very Acidic":v<6?"⚠️ Slightly Acidic":v<=7.5?"✅ Ideal (Neutral)":v<=8?"⚠️ Slightly Alkaline":"⚠️ Very Alkaline";}
+function updateParam(id,unit){
+  const v=parseFloat(document.getElementById("range-"+id).value);
+  const el=document.getElementById("val-"+id);
+  el.textContent=v+unit;
+  if(id==="ph"){el.style.color=phColor(v);document.getElementById("range-"+id).style.accentColor=phColor(v);document.getElementById("ph-tag").textContent=phLabel(v);document.getElementById("ph-tag").style.color=phColor(v);}
+}
+
+function fetchByGPS(){
+  if(!navigator.geolocation){document.getElementById("weatherError").innerHTML=`<div class="error-box">GPS not supported. Type your city.</div>`;return;}
+  document.getElementById("weatherResult").innerHTML=`<div style="text-align:center;padding:20px;">${dots()}</div>`;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude:la,longitude:lo}=pos.coords;
+    const C={Delhi:[28.6,77.2],Mumbai:[19.1,72.9],Bangalore:[12.9,77.6],Hyderabad:[17.4,78.5],Chennai:[13.1,80.3],Kolkata:[22.6,88.4],Pune:[18.5,73.9],Jaipur:[26.9,75.8],Lucknow:[26.8,80.9],Nagpur:[21.1,79.1]};
+    let n="Delhi",m=999;
+    Object.entries(C).forEach(([nm,[clat,clon]])=>{const d=Math.sqrt((la-clat)**2+(lo-clon)**2);if(d<m){m=d;n=nm;}});
+    document.getElementById("cityInput").value=n;fetchWeather();
+  },()=>{document.getElementById("weatherError").innerHTML=`<div class="error-box">Location denied. Please type your city.</div>`;document.getElementById("weatherResult").innerHTML="";});
+}
+
+async function fetchWeather(){
+  const city=document.getElementById("cityInput").value.trim();
+  if(!city)return;
+  document.getElementById("weatherError").innerHTML="";
+  document.getElementById("weatherResult").innerHTML=`<div style="text-align:center;padding:20px;">${dots()}<p style="font-size:.85rem;color:var(--muted);margin-top:8px;">Fetching weather...</p></div>`;
+  const key=city.toLowerCase().replace(/\s+/g,"").replace("bengaluru","bangalore").replace("bombay","mumbai").replace("madras","chennai").replace("calcutta","kolkata");
+  const mk=Object.keys(CITY_W).find(k=>key.includes(k)||k.includes(key));
+  if(!mk){document.getElementById("weatherError").innerHTML=`<div class="error-box">⚠️ "${city}" not found. Try: Delhi, Mumbai, Pune, Hyderabad, Bangalore, Chennai, Warangal, Nagpur, Jaipur, Amritsar...</div>`;document.getElementById("weatherResult").innerHTML="";return;}
+  const base=CITY_W[mk];
+  const w={city,temp:Math.round(vary(base.temp,1.5)),humidity:Math.round(vary(base.humidity,3)),wind:+vary(base.wind,2).toFixed(1),rain:+vary(base.rain,.5).toFixed(1),desc:base.desc,icon:base.icon,
+    forecast:FC_PAT.map((p,i)=>{const d=new Date();d.setDate(d.getDate()+i);return{date:d.toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"short"}),max:Math.round(base.temp+p[0]+Math.random()*2-1),min:Math.round(base.temp+p[0]-5),rain:+(base.rain+p[1]+Math.random()*.5).toFixed(1),icon:p[1]>1?"🌧️":p[1]>0?"🌦️":base.icon};})};
+  document.getElementById("weatherResult").innerHTML=`
+    <div class="weather-card"><div class="w-main"><div>
+      <div class="w-city">📍 ${w.city}</div>
+      <div class="w-temp">${w.temp}°C</div>
+      <div class="w-desc">${w.icon} ${w.desc}</div>
+    </div><div class="w-stats">
+      <div class="w-stat"><div class="sl">💧 Humidity</div><div class="sv">${w.humidity}%</div></div>
+      <div class="w-stat"><div class="sl">🌬️ Wind</div><div class="sv">${w.wind} km/h</div></div>
+      <div class="w-stat"><div class="sl">🌧️ Rainfall</div><div class="sv">${w.rain}mm</div></div>
+    </div></div></div>
+    <div style="font-size:.76rem;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">5-Day Forecast</div>
+    <div class="fc-wrap">${w.forecast.map(f=>`<div class="fcard"><div class="fdate">${f.date}</div><div class="ficon">${f.icon}</div><div class="fmax">${f.max}°</div><div class="fmin">${f.min}°</div><div class="frain">💧${f.rain}mm</div></div>`).join("")}</div>
+    <div class="advisory-box"><h4>🌾 Today's Farming Advisory</h4><div id="wAdv">${dots()}</div></div>`;
+  try{
+    const sys=`You are AgriGenius AI. Give practical farming advice in ${currentLang} based on this weather. 4 bullet points, farmer-friendly, specific to Indian farming.`;
+    const msg=`Weather in ${city}: ${w.desc}, Temp: ${w.temp}°C, Humidity: ${w.humidity}%, Wind: ${w.wind} km/h, Rain: ${w.rain}mm. Give today's farming advisory.`;
+    const adv=await callAI([{role:"user",content:msg}],sys);
+    document.getElementById("wAdv").innerHTML=`<div style="font-size:.85rem;line-height:1.75;color:#5d4037;">${fmt(adv)}</div>`;
+  }catch{document.getElementById("wAdv").innerHTML="<span style='color:var(--red);font-size:.83rem;'>⚠️ Could not load advisory.</span>";}
+}
+
+// SOIL
+async function analyzeSoil(){
+  const btn=document.getElementById("soilBtn");
+  btn.textContent="🔬 Analyzing...";btn.disabled=true;
+  document.getElementById("soilResult").innerHTML=`<div style="text-align:center;padding:16px;">${dots()}</div>`;
+  const vals={};SOIL_PARAMS.forEach(p=>{vals[p.id]=document.getElementById("range-"+p.id).value;});
+  const state=document.getElementById("soilState").value||"India (general)";
+  const season=document.getElementById("soilSeason").value;
+  const sys=`You are an expert soil scientist for Indian farming. Respond in ${currentLang}. Give structured, practical advice.`;
+  const msg=`Analyze this soil:
+pH: ${vals.ph}, Nitrogen: ${vals.nitrogen} kg/ha, Phosphorus: ${vals.phosphorus} kg/ha, Potassium: ${vals.potassium} kg/ha, Organic Matter: ${vals.organic}%, Moisture: ${vals.moisture}%
+Region: ${state}, Season: ${season}
+
+Give:
+1. 🌡️ Soil Health Summary (Good/Average/Poor for each)
+2. 🌾 Top 5 Recommended Crops
+3. 💊 Fertilizer Plan (organic + chemical, with quantities)
+4. 🔧 Soil Improvement Steps (3-month plan)
+5. ⚠️ Critical Warnings`;
+  try{
+    const r=await callAI([{role:"user",content:msg}],sys);
+    document.getElementById("soilResult").innerHTML=`<div class="result-box">${fmt(r)}</div>`;
+  }catch(e){document.getElementById("soilResult").innerHTML=`<div class="error-box">⚠️ Error: ${e.message}</div>`;}
+  btn.textContent="🔬 Analyze Soil & Get Recommendations";btn.disabled=false;
+}
+
+// PHOTO
+function handleDrop(e){e.preventDefault();document.getElementById("uploadZone").classList.remove("drag");processFile(e.dataTransfer.files[0]);}
+function processFile(file){
+  if(!file||!file.type.startsWith("image/")){alert("Please upload a valid image.");return;}
+  if(file.size>5*1024*1024){alert("Image too large. Max 5MB.");return;}
+  photoMime=file.type;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const src=e.target.result;photoBase64=src.split(",")[1];
+    document.getElementById("uploadContent").innerHTML=`<img src="${src}" style="max-width:100%;max-height:220px;border-radius:10px;object-fit:contain;"/>`;
+    document.getElementById("photoBtns").style.display="flex";
+    document.getElementById("photoTip").style.display="none";
+    document.getElementById("photoResult").innerHTML="";
+  };
+  reader.readAsDataURL(file);
+}
+function clearPhoto(){
+  photoBase64="";
+  document.getElementById("uploadContent").innerHTML=`<div class="upload-icon">📷</div><div class="upload-title">Tap to upload crop photo</div><div class="upload-sub">or drag & drop • JPG, PNG • Max 5MB</div><div class="upload-sub" style="margin-top:6px;">📱 Mobile: opens camera directly</div>`;
+  document.getElementById("photoBtns").style.display="none";
+  document.getElementById("photoTip").style.display="block";
+  document.getElementById("photoResult").innerHTML="";
+}
+async function analyzePhoto(){
+  if(!photoBase64){alert("Please upload a crop photo.");return;}
+  const btn=document.getElementById("photoBtn");
+  btn.textContent="🔍 Analyzing...";btn.disabled=true;
+  document.getElementById("photoResult").innerHTML=`<div style="text-align:center;padding:16px;">${dots()}<p style="font-size:.8rem;color:var(--muted);margin-top:6px;">Analyzing your crop photo...</p></div>`;
+  try{
+    const res=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+API_KEY,"HTTP-Referer":SITE_URL,"X-Title":SITE_NAME},
+      body:JSON.stringify({model:MODEL_VISION,max_tokens:1000,messages:[
+        {role:"system",content:`You are AgriGenius AI, expert plant pathologist for Indian crops. Respond in ${currentLang}. Be practical with specific Indian product names.`},
+        {role:"user",content:[
+          {type:"image_url",image_url:{url:`data:${photoMime};base64,${photoBase64}`}},
+          {type:"text",text:`Analyze this crop photo:
+1. 🌿 Crop Identification
+2. 🔍 Disease/Pest Diagnosis (exact name)
+3. 📊 Severity: Mild/Moderate/Severe
+4. 💊 Immediate Treatment (next 48 hours)
+5. 🌿 Organic Remedies (neem, garlic etc with quantities)
+6. 💉 Chemical Treatment (Indian product names & dosage)
+7. 🛡️ Prevention Tips
+8. ⏰ Expected Recovery Time`}
+        ]}
+      ]})
+    });
+    const data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    const r=data.choices[0].message.content;
+    document.getElementById("photoResult").innerHTML=`<div class="result-box">${fmt(r)}</div>`;
+  }catch(e){document.getElementById("photoResult").innerHTML=`<div class="error-box">⚠️ Error: ${e.message}</div>`;}
+  btn.textContent="🔍 Detect Disease & Get Treatment";btn.disabled=false;
+}
+</script>
+</body>
+</html>
